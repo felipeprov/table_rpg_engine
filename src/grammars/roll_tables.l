@@ -31,6 +31,7 @@ static bool seen_header = false;
 
 // Trim surrounding spaces
 static string trim(const string& s) {
+    std::printf("triming string %s\n", s.c_str());
     size_t start = s.find_first_not_of(" \t\r\n");
     if (start == string::npos) return "";
     size_t end = s.find_last_not_of(" \t\r\n");
@@ -38,6 +39,7 @@ static string trim(const string& s) {
 }
 
 static char* dupstr(const char* s) {
+    std::printf("dup string %s\n", s);
     size_t len = std::strlen(s);
     char* p = (char*)std::malloc(len + 1);
     if (!p) return nullptr;
@@ -76,17 +78,18 @@ NEWLINE     \r?\n
     // DO NOT return NEWLINE
     // Just ignore it
     // Debug
-    std::fprintf(stderr, "LEX: Ignoring blank line (CRLF)\n");
+    std::printf("LEX: Ignoring blank line (CRLF)\n");
 }
 
 
 ^[ \t]*\|[ \t-]*\|[ \t-]*\|[ \t]*{NEWLINE} {
     lex_state = LS_DEFAULT;
+    std::printf("Ignoring tokens with new line");
     /* no tokens emitted */
 }
 
 ^[ \t]*#[ \t]* {
-    std::fprintf(stderr, "LEX RULE: heading line start, text=\"%s\"\n", yytext);
+    std::printf("LEX RULE: heading line start, text=\"%s\"\n", yytext);
     lex_state = LS_AFTER_HASH;
     return debug_token('#', "#");                // matches the '#' literal in the grammar
 }
@@ -129,6 +132,7 @@ NEWLINE     \r?\n
 
 [^|\r\n]+ {
     string t = trim(yytext);
+    std::printf("processing text %s", t.c_str());
     if(t.empty()) {
 
     }
@@ -169,24 +173,26 @@ NEWLINE     \r?\n
 }
 
 {NEWLINE} {
-    std::fprintf(stderr, "LEX RULE: new line start, yyleng=%d, bytes=", yyleng);
+    std::printf("LEX RULE: new line start, yyleng=%d, bytes=", yyleng);
     for (int i = 0; i < yyleng; ++i) {
         unsigned char c = (unsigned char)yytext[i];
-        std::fprintf(stderr, " 0x%02X('%c')",
+        std::printf(" 0x%02X('%c')",
                      c,
                      (c >= 32 && c < 127) ? c : '.');
     }
-    std::fprintf(stderr, "\n");
+    std::printf("\n");
 
     lex_state = LS_DEFAULT;
     return debug_token(NEWLINE, "\\n");
 }
 
 [ \t]+ {
+    std::printf("Ignoring token");
     //ignore
 }
 
 \r {
+    std::printf("Ignoring token");
     //ignore
 }
 
