@@ -7,11 +7,14 @@
 #include <roll_tables_gen.hpp> // adjust to your Bison output name
 #include <string>
 #include <iostream>
+#include <cstring>
 
 #ifdef _WIN32
     #include <io.h>
     #define isatty  _isatty
     #define fileno _fileno   // also removes the deprecation noise
+#else 
+    #include <unistd.h>
 #endif
 
 using std::string;

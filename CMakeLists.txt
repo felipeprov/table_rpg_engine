@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.1)
-project(table_rpg_engine)
+project(table_rpg_engine CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 add_executable(table_rpg_engine src/main.cpp)
