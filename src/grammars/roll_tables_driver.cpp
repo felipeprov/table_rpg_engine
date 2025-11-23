@@ -56,8 +56,8 @@ RollTable parse_roll_table_from_file(const std::string& path)
         std::ungetc(c, f); // put it back
     }
 
-    yydebug = 1;
-    yyset_debug(1);
+    //yydebug = 1;
+    //yyset_debug(1);
 
     yyin = f;              // tell Flex to read from file
     yyrestart(yyin);
