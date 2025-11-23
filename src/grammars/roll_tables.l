@@ -31,7 +31,7 @@ static bool seen_header = false;
 
 // Trim surrounding spaces
 static string trim(const string& s) {
-    std::printf("triming string %s\n", s.c_str());
+    //std::printf("LEX: triming string %s\n", s.c_str());
     size_t start = s.find_first_not_of(" \t\r\n");
     if (start == string::npos) return "";
     size_t end = s.find_last_not_of(" \t\r\n");
@@ -39,7 +39,7 @@ static string trim(const string& s) {
 }
 
 static char* dupstr(const char* s) {
-    std::printf("dup string %s\n", s);
+    //std::printf("LEX: dup string %s\n", s);
     size_t len = std::strlen(s);
     char* p = (char*)std::malloc(len + 1);
     if (!p) return nullptr;
@@ -63,7 +63,7 @@ static const char* tokname(int t) {
 
 
 static int debug_token(int t, const char* text) {
-    std::printf("LEX: %-12s \"%s\"\n", tokname(t), text);
+    //std::printf("LEX: %-12s \"%s\"\n", tokname(t), text);
     return t;
 }
 
@@ -78,18 +78,18 @@ NEWLINE     \r?\n
     // DO NOT return NEWLINE
     // Just ignore it
     // Debug
-    std::printf("LEX: Ignoring blank line (CRLF)\n");
+    //std::printf("LEX: Ignoring blank line (CRLF)\n");
 }
 
 
 ^[ \t]*\|[ \t-]*\|[ \t-]*\|[ \t]*{NEWLINE} {
     lex_state = LS_DEFAULT;
-    std::printf("Ignoring tokens with new line");
+    //std::printf("LEX: Ignoring tokens with new line");
     /* no tokens emitted */
 }
 
-^[ \t]*#[ \t]* {
-    std::printf("LEX RULE: heading line start, text=\"%s\"\n", yytext);
+^#[ \t]* {
+    //std::printf("LEX RULE: heading line start, text=\"%s\"\n", yytext);
     lex_state = LS_AFTER_HASH;
     return debug_token('#', "#");                // matches the '#' literal in the grammar
 }
@@ -130,9 +130,9 @@ NEWLINE     \r?\n
     return debug_token('|', "|");
 }
 
-[^|\r\n]+ {
+[^#|\r\n]+ {
     string t = trim(yytext);
-    std::printf("processing text %s", t.c_str());
+    //std::printf("LEX: processing text %s\n", t.c_str());
     if(t.empty()) {
 
     }
@@ -173,31 +173,19 @@ NEWLINE     \r?\n
 }
 
 {NEWLINE} {
-    std::printf("LEX RULE: new line start, yyleng=%d, bytes=", yyleng);
-    for (int i = 0; i < yyleng; ++i) {
-        unsigned char c = (unsigned char)yytext[i];
-        std::printf(" 0x%02X('%c')",
-                     c,
-                     (c >= 32 && c < 127) ? c : '.');
-    }
-    std::printf("\n");
+    //std::printf("LEX RULE: new line start, yyleng=%d, bytes=", yyleng);
 
     lex_state = LS_DEFAULT;
     return debug_token(NEWLINE, "\\n");
 }
 
-[ \t]+ {
-    std::printf("Ignoring token");
-    //ignore
-}
-
 \r {
-    std::printf("Ignoring token");
+    //std::printf("LEX: Ignoring token");
     //ignore
 }
 
 . { 
-    std::printf("Ignoring token");
+    //std::printf("LEX: Ignoring token");
     /* ignore */ 
 }
 

@@ -44,8 +44,8 @@ file:
     }
 ;
 
-header: '|' ROLL_TYPE '|' TABLE_NAME '|' {
-    std::printf("%s %s", $2, $4);
+header: '|' ROLL_TYPE '|' TABLE_NAME '|' NEWLINE {
+    std::printf("Parser: HEADER %s %s\n", $2, $4);
     free($2);
     free($4);
 };
@@ -56,7 +56,7 @@ rows:
 
 row:
     '|' ROLL '|' ROLL_VALUE '|' NEWLINE {
-        std::printf("%s %s", $2, $4);
+        std::printf("Parser: ROLL %s %s\n", $2, $4);
         free($2);
         free($4);
 };

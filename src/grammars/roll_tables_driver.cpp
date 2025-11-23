@@ -9,6 +9,8 @@
 
 extern FILE* yyin;
 extern int yyparse();
+extern void yyrestart(FILE* );
+extern void yyset_debug (int  _bdebug );
 extern RollTable* g_roll_table;
 
 RollTable parse_roll_table_from_file_s(const std::string& path)
@@ -55,8 +57,10 @@ RollTable parse_roll_table_from_file(const std::string& path)
     }
 
     yydebug = 1;
+    yyset_debug(1);
 
     yyin = f;              // tell Flex to read from file
+    yyrestart(yyin);
     g_roll_table = nullptr;
 
     if (yyparse() != 0) {
