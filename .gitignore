@@ -46,3 +46,4 @@ build/
 venv/
 __pycache__/
 Testing
+compile_commands.json
