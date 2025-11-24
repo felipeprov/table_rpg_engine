@@ -46,6 +46,9 @@ file:
 
 header: '|' ROLL_TYPE '|' TABLE_NAME '|' NEWLINE {
     std::printf("Parser: HEADER %s %s\n", $2, $4);
+    g_roll_table = new RollTable();
+    g_roll_table->title.assign($2);
+    g_roll_table->dice.assign($4);
     free($2);
     free($4);
 };
@@ -57,6 +60,10 @@ rows:
 row:
     '|' ROLL '|' ROLL_VALUE '|' NEWLINE {
         std::printf("Parser: ROLL %s %s\n", $2, $4);
+        RollRow row;
+        row.range.assign($2);
+        row.result.assign($4);
+        g_roll_table->rows.push_back(row);
         free($2);
         free($4);
 };

@@ -1,6 +1,6 @@
 # Scene Adjustment Table
 
-| 1d10 | Result                    |
+| 1d10 | Expected result           |
 | ---- | ------------------------- |
 | 1    | Remove a character        |
 | 2    | Add a Character           |
