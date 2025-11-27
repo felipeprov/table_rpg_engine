@@ -44,10 +44,10 @@ find_package(FLEX REQUIRED)
 
 # main executables
 add_library(trpg_lib
-    src/
+    src/core/engine.c
+    src/core/pallocator.c
     src/core/parena.c
     src/core/parray.c
-    src/core/engine.c
 )
 
 target_include_directories(trpg_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/core)
@@ -107,7 +107,7 @@ endfunction()
 
 function(add_unit_test name)
     # All the sources for this test executable
-    add_executable(${name} ${ARGN} tests/test_main.cpp)
+    add_executable(${name} ${ARGN} tests/test_main.c tests/test_framework.c)
 
     # Link whatever your tests need
     target_link_libraries(${name} PRIVATE trpg_lib)
@@ -116,8 +116,8 @@ function(add_unit_test name)
     prov_test_framework_discover_tests( ${name} )
 endfunction()
 
-#enable_testing()
-#include(CTest)
-#add_unit_test(ut_hello tests/test_hello.cpp)
+enable_testing()
+include(CTest)
+add_unit_test(ut_hello tests/test_hello.c)
 
 
