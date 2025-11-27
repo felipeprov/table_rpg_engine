@@ -1,49 +1,58 @@
 cmake_minimum_required(VERSION 4.1)
-project(table_rpg_engine CXX)
+project(table_rpg_engine C)
 
-set(CMAKE_CXX_STANDARD 17)
-add_executable(table_rpg_engine src/main.cpp)
+set(CMAKE_C_STANDARD 23)
+add_executable(table_rpg_engine src/main.c)
 
 # configure bison/flex
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 
-BISON_TARGET(
-    bison_tables_parser # target name
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/grammars/roll_tables.y
-    ${CMAKE_CURRENT_BINARY_DIR}/generated/roll_tables_gen.cpp
-    DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated/roll_tables_gen.hpp
-)
+#BISON_TARGET(
+#    bison_tables_parser # target name
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/grammars/roll_tables.y
+#    ${CMAKE_CURRENT_BINARY_DIR}/generated/roll_tables_gen.cpp
+#    DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated/roll_tables_gen.hpp
+#)
+#
+#BISON_TARGET(
+#    bison_tables_parser2 # target name
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/grammars/roll_tables_v2.y
+#    ${CMAKE_CURRENT_BINARY_DIR}/generated/roll_tables_v2_gen.cpp
+#    DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated/roll_tables_v2_gen.hpp
+#)
+#
+#FLEX_TARGET(
+#    flex_tables_lexer 
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/grammars/roll_tables.l
+#    ${CMAKE_CURRENT_BINARY_DIR}/generated/roll_tables_lexer.cpp
+#)
+#
+#ADD_FLEX_BISON_DEPENDENCY(flex_tables_lexer bison_tables_parser)
 
-FLEX_TARGET(
-    flex_tables_lexer 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/grammars/roll_tables.l
-    ${CMAKE_CURRENT_BINARY_DIR}/generated/roll_tables_lexer.cpp
-)
+#add_library(tables_parser
+#    ${BISON_bison_tables_parser_OUTPUTS}
+#    ${FLEX_flex_tables_lexer_OUTPUTS}
+#    src/grammars/roll_tables_driver.cpp
+#)
 
-ADD_FLEX_BISON_DEPENDENCY(flex_tables_lexer bison_tables_parser)
-
-add_library(tables_parser
-    ${BISON_bison_tables_parser_OUTPUTS}
-    ${FLEX_flex_tables_lexer_OUTPUTS}
-    src/grammars/roll_tables_driver.cpp
-)
-
-target_include_directories(tables_parser
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/grammars
-        ${CMAKE_CURRENT_BINARY_DIR}/generated
-)
+#target_include_directories(tables_parser
+#    PUBLIC
+#        ${CMAKE_CURRENT_SOURCE_DIR}/src/grammars
+#        ${CMAKE_CURRENT_BINARY_DIR}/generated
+#)
 
 # main executables
 add_library(trpg_lib
-    src/engine/engine.cpp
+    src/
+    src/core/parena.c
+    src/core/parray.c
+    src/core/engine.c
 )
 
-target_include_directories(trpg_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/engine)
-target_link_libraries(trpg_lib PUBLIC tables_parser)
+target_include_directories(trpg_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/core)
+#target_link_libraries(trpg_lib PUBLIC tables_parser)
 target_link_libraries(table_rpg_engine PRIVATE trpg_lib)
-
 
 
 # Enable testing
@@ -107,8 +116,8 @@ function(add_unit_test name)
     prov_test_framework_discover_tests( ${name} )
 endfunction()
 
-enable_testing()
-include(CTest)
-add_unit_test(ut_hello tests/test_hello.cpp)
+#enable_testing()
+#include(CTest)
+#add_unit_test(ut_hello tests/test_hello.cpp)
 
 
