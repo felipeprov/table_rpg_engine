@@ -59,3 +59,12 @@ pallocator_t arena_allocator = {
     .sanity_check = arena_sanity_check,
     .frame_free = arena_frame_free,
 };
+
+
+pallocator_t *palloc_arena_create(size_t size) {
+    size_t total = sizeof(pallocator_t) + size + sizeof(arena_data_t);
+    pallocator_t *alloc = (pallocator_t *)malloc(total);
+    *alloc = arena_allocator;
+    alloc->data = alloc->init(size);
+    return alloc;
+}
